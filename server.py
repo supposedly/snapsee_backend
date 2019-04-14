@@ -9,6 +9,7 @@ import faces
 from app import app
 from database import db, User
 
+
 def _coalesce_all_columns(model):
     return {
       colname: coalesce(get(colname), getattr(model, colname))
@@ -16,10 +17,8 @@ def _coalesce_all_columns(model):
     }
 
 
-def _get_all(model, *, filter_none=False):
-    if filter_none:
-        return {colname: get(colname) for colname in model.__table__.columns._data if get(colname) is not None}
-    return {colname: get(colname) for colname in model.__table__.columns._data}
+def _get_all(model):
+    return {colname: get(colname) for colname in model.__table__.columns._data if get(colname) is not None}
 
 
 def get(key):
@@ -27,6 +26,7 @@ def get(key):
         return request.files.get(key).read()
     values = request.get_json() if request.is_json else request.values
     return values.get(key)
+
 
 @app.route('/')
 def hello_world():
@@ -68,7 +68,7 @@ def edit_user():
 def user_get():
     try:
         results = User.query.filter_by(
-          **_get_all(User, filter_none=True)
+          **_get_all(User)
         ).all()
     except Exception as e:
         return str(e), 400
@@ -78,7 +78,7 @@ def user_get():
 @app.route('/user/get/<colname>', methods=['GET'])
 def user_get_column(colname):
     try:
-        results = [{colname: getattr(i, colname)} for i in User.query.filter_by(**_get_all(User, filter_none=True)).all()]
+        results = [{colname: getattr(i, colname)} for i in User.query.filter_by(**_get_all(User)).all()]
     except Exception as e:
         return str(e), 400
     return jsonify(results), 200
