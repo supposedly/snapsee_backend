@@ -34,12 +34,15 @@ def hello_world():
 
 @app.route('/user/add', methods=['POST'])
 def add_user():
+    print(request, request.form)
     if not get('username'):
         return 'Must provide username', 400
+    print('username supplied')
     try:
         db.session.add(**_get_all(User))
     except sqlalchemy.exc.IntegrityError as e:
         db.session.rollback()
+        print('fug')
         return str(e), 400  # XXX: 409?
     db.session.commit()
     return '', 204
