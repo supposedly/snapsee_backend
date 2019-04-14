@@ -2,4 +2,4 @@ from flask import Flask
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app, resources={'/*': {'origins': '*'}})
+CORS(app, resources={'*': {'origins': '*'}, '/image/match/': {'origins': '*'}})

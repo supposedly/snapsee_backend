@@ -10,6 +10,12 @@ from app import app
 from database import db, User
 
 
+
+from datetime import timedelta
+from flask import make_response, request, current_app
+from functools import update_wrapper
+
+
 def _coalesce_all_columns(model):
     return {
       colname: coalesce(get(colname), getattr(model, colname))
@@ -52,7 +58,7 @@ def add_user():
     return '', 204
 
 
-@app.route('/user/update', methods=['POST'])
+@app.route('/user/update/', methods=['POST'])
 def edit_user():
     if not get('username'):
         return 'Must provide username', 400
@@ -87,11 +93,12 @@ def user_get_column(colname):
     return jsonify(results), 200
 
 
-@app.route('/image/match', methods=['POST'])
+@app.route('/image/match/', methods=['POST'])
 def match_image():
-    match_found = faces.match(get('image'))
-    return jsonify({'result': match_found}), 204
+    return jsonify({'match': faces.match(get('image'))}), 204
 
 
 if __name__ == '__main__':
     app.run('127.0.0.1', 8000, debug=True)
+
+

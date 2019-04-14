@@ -14,20 +14,20 @@ def _fetch_images():
 
 
 
-def _fetch(query, attr):
+def _fetch(query, *attrs):
     start = 0
     while True:
         results = query.slice(start, start + 5).all()
         if results is None:
             break
         for result in results:
-            yield getattr(result, attr)
+            yield [getattr(result, attr) for attr in attrs]
         start += 5
 
 
 def match(data):
     # data will be a bytestring
-    #
+    # --
     # load your image
     with NamedTemporaryFile() as f:
         f.write(data)
@@ -36,7 +36,7 @@ def match(data):
     to_match_encoded = face_recognition.face_encodings(to_match)
 
     # iterate over each image
-    for image in _fetch(User.query, 'image'):
+    for image, username in _fetch(User.query, 'image', 'username'):
         with NamedTemporaryFile() as f:
             f.write(image)
             current = face_recognition.load_image_file(f.name)
@@ -45,8 +45,8 @@ def match(data):
         # match your image with the image and check if it matches
         result = face_recognition.compare_faces(
           current_encoded, to_match_encoded
-        )
+        )[0]
         # check if it was a match
-        if any(result):
-            return True
-    return False
+        if result:
+            return username
+    return None
