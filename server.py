@@ -23,8 +23,8 @@ def _get_all(model, *, filter_none=False):
 
 
 def get(key):
-    if key in request.form.files:
-        return request.form.files.get(key).read()
+    if key in request.files:
+        return request.files.get(key).read()
     return request.values.get(key)
 
 @app.route('/')
