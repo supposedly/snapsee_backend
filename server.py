@@ -10,12 +10,6 @@ from app import app
 from database import db, User
 
 
-
-from datetime import timedelta
-from flask import make_response, request, current_app
-from functools import update_wrapper
-
-
 def _coalesce_all_columns(model):
     return {
       colname: coalesce(get(colname), getattr(model, colname))
@@ -95,7 +89,7 @@ def user_get_column(colname):
 
 @app.route('/image/match/', methods=['POST'])
 def match_image():
-    return jsonify({'match': faces.match(get('image'))}), 204
+    return jsonify(match=faces.match(get('image'))), 200
 
 
 if __name__ == '__main__':
