@@ -14,11 +14,16 @@ def _coalesce_all_columns(model):
     return {
       colname: coalesce(get(colname), getattr(model, colname))
       for colname in model.__table__.columns._data
+      if colname != 'uid'
     }
 
 
 def _get_all(model):
-    return {colname: get(colname) for colname in model.__table__.columns._data if get(colname) is not None}
+    return {
+      colname: get(colname)
+      for colname in model.__table__.columns._data
+      if get(colname) is not None
+    }
 
 
 def get(key):
@@ -38,12 +43,10 @@ def add_user():
     print(request, request.form)
     if not get('username'):
         return 'Must provide username', 400
-    print('username supplied')
     try:
         db.session.add(User(**_get_all(User)))
     except sqlalchemy.exc.IntegrityError as e:
         db.session.rollback()
-        print('fug')
         return str(e), 400  # XXX: 409?
     db.session.commit()
     return '', 204
@@ -56,7 +59,7 @@ def edit_user():
     try:
         User.query.filter_by(
           username=get('username')
-        ).update(**_coalesce_all_columns(User))
+        ).update(_coalesce_all_columns(User), synchronize_session=False)
     except sqlalchemy.exc.IntegrityError as e:
         db.session.rollback()
         return str(e), 400
@@ -86,5 +89,8 @@ def user_get_column(colname):
 
 @app.route('/image/match', methods=['POST'])
 def match_image():
-    return 'Not available', 404
     match_found = faces.match(get('image'))
+
+
+if __name__ == '__main__':
+    app.run('127.0.0.1', 8000, debug=True)

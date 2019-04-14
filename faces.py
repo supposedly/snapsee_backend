@@ -1,6 +1,6 @@
 from tempfile import NamedTemporaryFile
 
-import face_recognition
+#import face_recognition
 
 from database import db, User
 

@@ -1,3 +1,5 @@
+import base64
+
 from flask_sqlalchemy import SQLAlchemy
 
 from app import app
@@ -23,4 +25,7 @@ class User(db.Model):
     image = db.Column(db.LargeBinary)
 
     def to_dict(self):
-        return {colname: getattr(self, colname) for colname in self.__table__.columns._data}
+      return {
+          **{colname: getattr(self, colname) for colname in self.__table__.columns._data},
+          'image': base64.b64encode(self.image).decode('utf-8')
+        }
