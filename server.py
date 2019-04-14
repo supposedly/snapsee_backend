@@ -25,7 +25,8 @@ def _get_all(model, *, filter_none=False):
 def get(key):
     if key in request.files:
         return request.files.get(key).read()
-    return request.values.get(key)
+    values = request.get_json() if request.is_json else request.values
+    return values.get(key)
 
 @app.route('/')
 def hello_world():
