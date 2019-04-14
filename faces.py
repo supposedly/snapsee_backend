@@ -44,7 +44,7 @@ def match(data):
         current_encoded = face_recognition.face_encodings(current)[0]
         # match your image with the image and check if it matches
         result = face_recognition.compare_faces(
-          current_encoded, to_match_encoded
+          [current_encoded], to_match_encoded
         )[0]
         # check if it was a match
         if result:
