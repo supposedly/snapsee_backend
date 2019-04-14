@@ -1,6 +1,6 @@
-from backend.flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
-from backend import app
+from app import app
 
 # good security xd
 app.config['SQLALCHEMY_DATABASE_URI'] = (

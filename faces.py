@@ -2,7 +2,7 @@ from tempfile import NamedTemporaryFile
 
 import face_recognition
 
-from backend.database import db, User
+from database import db, User
 
 
 def _nmt_from(file_object):

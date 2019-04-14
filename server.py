@@ -5,8 +5,9 @@ from sqlalchemy.sql.functions import coalesce
 from flask import request, send_from_directory
 from flask.json import jsonify
 
-from backend import app#, faces
-from backend.database import db, User
+import faces
+from app import app
+from database import db, User
 
 def _coalesce_all_columns(model):
     return {
