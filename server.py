@@ -90,6 +90,7 @@ def user_get_column(colname):
 @app.route('/image/match', methods=['POST'])
 def match_image():
     match_found = faces.match(get('image'))
+    return jsonify({'result': match_found}), 204
 
 
 if __name__ == '__main__':
