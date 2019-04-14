@@ -1,1 +1,1 @@
-web: gunicorn snapsee_backend:app
+web: gunicorn server:app
