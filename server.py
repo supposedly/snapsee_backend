@@ -40,7 +40,7 @@ def add_user():
         return 'Must provide username', 400
     print('username supplied')
     try:
-        db.session.add(**_get_all(User))
+        db.session.add(User(**_get_all(User)))
     except sqlalchemy.exc.IntegrityError as e:
         db.session.rollback()
         print('fug')
