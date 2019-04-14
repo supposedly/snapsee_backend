@@ -33,7 +33,7 @@ def match(data):
         f.write(data)
         to_match = face_recognition.load_image_file(f.name)
     # encoded the loaded image into a feature vector
-    to_match_encoded = face_recognition.face_encodings(to_match)
+    to_match_encoded = face_recognition.face_encodings(to_match)[0]
 
     # iterate over each image
     for image, username in _fetch(User.query, 'image', 'username'):
@@ -41,7 +41,7 @@ def match(data):
             f.write(image)
             current = face_recognition.load_image_file(f.name)
         # encode the loaded image into a feature vector
-        current_encoded = face_recognition.face_encodings(current)
+        current_encoded = face_recognition.face_encodings(current)[0]
         # match your image with the image and check if it matches
         result = face_recognition.compare_faces(
           current_encoded, to_match_encoded
